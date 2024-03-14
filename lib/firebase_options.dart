@@ -21,7 +21,10 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for ios - '
@@ -50,20 +53,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBndvS2lg3ehJlPUP11N4ZYWdGqwuS8D8k',
-    appId: '1:879335603711:web:470d259b11de938599fbca',
-    messagingSenderId: '879335603711',
-    projectId: 'web-notification-44f09',
-    authDomain: 'web-notification-44f09.firebaseapp.com',
-    storageBucket: 'web-notification-44f09.appspot.com',
-    measurementId: 'G-7ZPEQGWK7C',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAfJiucPm0jBbTn3OXZ88osUBYfRRjfODE',
-    appId: '1:879335603711:android:58fcddc7c4f0fd2f99fbca',
-    messagingSenderId: '879335603711',
-    projectId: 'web-notification-44f09',
-    storageBucket: 'web-notification-44f09.appspot.com',
+    apiKey: 'AIzaSyARizMOw49asTpx49b8RIiv23EoR0TAcIM',
+    appId: '1:386122069873:web:c4ede45e8659494af8e8d0',
+    messagingSenderId: '386122069873',
+    projectId: 'flutterwebpoc-5146e',
+    authDomain: 'flutterwebpoc-5146e.firebaseapp.com',
+    storageBucket: 'flutterwebpoc-5146e.appspot.com',
+    measurementId: 'G-N62VQ3ZDG6',
   );
 }

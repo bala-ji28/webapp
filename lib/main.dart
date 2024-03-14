@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:js' as js;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -31,22 +32,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Future<void> notifications(RemoteMessage message) async {
+//   RemoteNotification? notification = message.notification;
+//   log('---->$notification');
+// }
+
 Future<void> notifications(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
   log('---->$notification');
-  // showDialog(
-  //   context: context,
-  //   builder: (context) => AlertDialog(
-  //     title: Text(notification!.title.toString()),
-  //     content: Text(notification.body.toString()),
-  //     actions: [
-  //       TextButton(
-  //         onPressed: () => Navigator.pop(context),
-  //         child: const Text('Ok'),
-  //       ),
-  //     ],
-  //   ),
-  // );
+  js.context.callMethod("sendNotification");
 }
 
 class MyHomePage extends StatefulWidget {
@@ -59,21 +53,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future listenNotifications() async {
-    FirebaseMessaging.onBackgroundMessage(notifications);
-    FirebaseMessaging.onMessage.listen(notifications);
-  }
+  // @override
+  // void initState() {
+  //   js.context.callMethod("getToken");
+  //   FirebaseMessaging.onBackgroundMessage(notifications);
+  //   FirebaseMessaging.onMessage.listen(notifications);
+  //   super.initState();
+  // }
 
   Future getToken() async {
-    var token = await FirebaseMessaging.instance.getToken();
-    log('--Token-->$token');
-  }
-
-  @override
-  void initState() {
-    getToken();
-    listenNotifications();
-    super.initState();
+    js.context.callMethod("getToken");
+    // js.context.callMethod("sendNotification");
+    // final fcm = FirebaseMessaging.instance;
+    // NotificationSettings settings = await fcm.requestPermission();
+    // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    //   await fcm.deleteToken();
+    //   var token = await fcm.getToken(
+    //       vapidKey:
+    //           "BMSHwYZeC5byVQtFN1YAwDtGV7c0wxQxcB_mvUTbw6JYIt7pz_plcwJCSLk69thEwE7U48KM12wpKRzwiu0AygY");
+    //   log('--Token-->$token');
+    // }
   }
 
   @override
@@ -83,7 +82,16 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(child: Text('Firebase Notificaion')),
+      body: Center(
+          child: Column(
+        children: [
+          const Text('Firebase Notification'),
+          ElevatedButton(
+            onPressed: getToken,
+            child: const Text("Request Token"),
+          )
+        ],
+      )),
     );
   }
 }
