@@ -32,44 +32,32 @@
 
   <title>webapp</title>
   <link rel="manifest" href="manifest.json">
-  <script>
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-analytics.js";
-    import { getMessaging } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-messagin.js";
-  </script>
+
   <script>
     // The value below is injected by flutter build, do not touch.
     const serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
   <script src="flutter.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 
 <body>
-
-  <!-- 
-  <script src="main.dart.js" type="application/javascript"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      // Service workers are supported. Use them.
-      window.addEventListener('load', function () {
-        // ADD THIS LINE
-        navigator.serviceWorker.register('/firebase-messaging-sw.js');
-
-        // Wait for registration to finish before dropping the <script> tag.
-        // Otherwise, the browser will load the script multiple times,
-        // potentially different versions.
-        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
-
-        //  ...
-      });
-    }
-  </script> -->
-
   <script>
     window.addEventListener('load', function (ev) {
-      // navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      if ('serviceWorker' in navigator) { // Check that service workers are supported        
+        navigator.serviceWorker.ready.then(function (_) {
+          navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            .then(function (registration) {
+              console.log('Registration successful, scope is:', registration.scope);
+            })
+            .catch(function (err) {
+              console.log('Service worker registration failed, error:', err);
+            });
+        });
+      }
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {

@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'dart:js' as js;
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -59,21 +61,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future listenNotifications() async {
-    FirebaseMessaging.onBackgroundMessage(notifications);
-    FirebaseMessaging.onMessage.listen(notifications);
-  }
-
   Future getToken() async {
-    var token = await FirebaseMessaging.instance.getToken();
+    await js.context.callMethod("requestPermission");
+    final token = await js.context.callMethod("getToken");
     log('--Token-->$token');
-  }
-
-  @override
-  void initState() {
-    getToken();
-    listenNotifications();
-    super.initState();
+    // final fcm = FirebaseMessaging.instance;
+    // NotificationSettings settings = await fcm.requestPermission();
+    // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    //   await fcm.deleteToken();
+    //   var token = await fcm.getToken(
+    //       vapidKey:
+    //           "BMSHwYZeC5byVQtFN1YAwDtGV7c0wxQxcB_mvUTbw6JYIt7pz_plcwJCSLk69thEwE7U48KM12wpKRzwiu0AygY");
+    //   log('--Token-->$token');
+    // }
   }
 
   @override
@@ -83,7 +83,16 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(child: Text('Firebase Notificaion')),
+      body: Center(
+          child: Column(
+        children: [
+          const Text('Firebase Notification'),
+          ElevatedButton(
+            onPressed: getToken,
+            child: const Text("Request Token"),
+          )
+        ],
+      )),
     );
   }
 }
