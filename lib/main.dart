@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'dart:js' as js;
+import 'dart:js_interop';
+import 'dart:js_util';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,6 +55,9 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+@JS()
+external JSPromise<JSString> getToken();
+
 class _MyHomePageState extends State<MyHomePage> {
   // @override
   // void initState() {
@@ -61,8 +67,18 @@ class _MyHomePageState extends State<MyHomePage> {
   //   super.initState();
   // }
 
-  Future getToken() async {
-    js.context.callMethod("getToken");
+  Future requestToken() async {
+    final token = await promiseToFuture(getToken());
+    log('--->$token');
+    final HttpsCallable callable =
+        FirebaseFunctions.instanceFor(region: 'us-central1')
+            .httpsCallable('subscribeToTopic');
+    var res = await callable.call(<String, dynamic>{
+      'token': token.toString(),
+      'unSubscribe': false,
+    });
+    log('------>>>>${res.data.toString()}');
+    // log('--Token-->$token');
     // js.context.callMethod("sendNotification");
     // final fcm = FirebaseMessaging.instance;
     // NotificationSettings settings = await fcm.requestPermission();
@@ -83,15 +99,20 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-          child: Column(
-        children: [
-          const Text('Firebase Notification'),
-          ElevatedButton(
-            onPressed: getToken,
-            child: const Text("Request Token"),
-          )
-        ],
-      )),
+        child: Column(
+          children: [
+            const Text('Firebase Notification'),
+            ElevatedButton(
+              onPressed: () {
+                // getToken();
+                requestToken();
+                // send();
+              },
+              child: const Text("Request Token"),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

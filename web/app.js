@@ -58,11 +58,11 @@ messaging.onMessage((payload) => {
 // }
 
 async function getToken() {
-    try {
-        await messaging.deleteToken();
-    } catch (error) {
-        console.log('An error occurred while deleting token. ', error);
-    }
+    // try {
+    //     await messaging.deleteToken();
+    // } catch (error) {
+    //     console.log('An error occurred while deleting token. ', error);
+    // }
     try {
         const currentToken = await messaging.getToken({ vapidKey: 'BL1ta_wwUBxYgHgK6cOPYY3LIdBtrC9tdNl6_v-6GwRwWvWjHDPAF5bXjdxU2pRQkSDIUUq37YY1ErW88Y-Jpaw' });
         console.log(currentToken);
@@ -70,7 +70,7 @@ async function getToken() {
     } catch (error) {
         console.log('An error occurred while retrieving token. ', error);
     }
-    return null;
+    // return null;
 }
 // messaging.getToken({ vapidKey: 'BL1ta_wwUBxYgHgK6cOPYY3LIdBtrC9tdNl6_v-6GwRwWvWjHDPAF5bXjdxU2pRQkSDIUUq37YY1ErW88Y-Jpaw' }).then((currentToken) => {
 //     console.log('---token--> $currentToken');
